@@ -2,12 +2,16 @@ package ut3.act3.notas_android;
 
 // IMPORTS
 import android.os.Bundle;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Actividad principal de la aplicación.
@@ -16,6 +20,12 @@ import androidx.core.view.WindowInsetsCompat;
  * @version 1.0.0
  */
 public class MainActivity extends AppCompatActivity {
+    // Creamos el RecyclerView
+    RecyclerView vistaNotas;
+
+    // Creamos la lista de notas
+    List<Nota> notas = new ArrayList<Nota>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +41,20 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Asignamos y declaramos el RecyclerView con su adaptador y su layout manager
+        vistaNotas = findViewById(R.id.vistaNotas);
+        vistaNotas.setLayoutManager(new LinearLayoutManager(this));
 
+        Adapter adapter = new Adapter(getApplicationContext(), notas);
+        vistaNotas.setAdapter(adapter);
+
+        // Creamos 3 notas que añadimos a la lista
+        notas.add(new Nota("Nota 1", "prueba"));
+        notas.add(new Nota("Nota 2", "prueba"));
+        notas.add(new Nota("Nota 3", "pruebajldajskdljaslkdjlaksjdlkasjdlkasjdlkasjdlkasjdlkajsdlkajsdlkasjdlkajsdlkajsdlkjasldkjaslkdasjlk"));
+        notas.add(new Nota("Prueba 3", "jay"));
+
+        // Notificamos al adaptador que hay nueva info
+        adapter.notifyDataSetChanged();
     }
 }
