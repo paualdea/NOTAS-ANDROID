@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".bd.NotaApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -21,6 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".NotaDetalles"/>
+        <activity android:name=".NuevaNota"/>
     </application>
 
 </manifest>

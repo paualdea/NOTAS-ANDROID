@@ -1,9 +1,10 @@
 package ut3.act3.notas_android;
 
 // IMPORTS
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,9 +13,16 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ut3.act3.notas_android.bd.NotaApplication;
+import ut3.act3.notas_android.bd.NotaDatabase;
+import ut3.act3.notas_android.bd.Notas;
 
 /**
  * Actividad principal de la aplicación.
@@ -23,12 +31,15 @@ import java.util.List;
  * @version 1.0.0
  */
 public class MainActivity extends AppCompatActivity implements Adapter.notaListener {
-    // Creamos el RecyclerView
+    // Creamos el RecyclerView y su adaptador
     RecyclerView vistaNotas;
+    Adapter adapter;
 
     // Creamos la lista de notas
     List<Nota> notas = new ArrayList<Nota>();
 
+    // Creamos la lista de notas de la DB y la DB
+    List<Notas> notasDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,20 +55,67 @@ public class MainActivity extends AppCompatActivity implements Adapter.notaListe
             return insets;
         });
 
+        // Creamos el boton y lo vinculamos desde el layout
+        FloatingActionButton addNota = findViewById(R.id.addNota);
+
         // Asignamos y declaramos el RecyclerView con su adaptador y su layout manager
         vistaNotas = findViewById(R.id.vistaNotas);
         vistaNotas.setLayoutManager(new LinearLayoutManager(this));
 
-        Adapter adapter = new Adapter(getApplicationContext(), notas, this);
+        adapter = new Adapter(getApplicationContext(), notas, this);
         vistaNotas.setAdapter(adapter);
 
-        // Creamos 4 notas que añadimos a la lista
-        notas.add(new Nota("Nota 1", "prueba"));
-        notas.add(new Nota("Nota 2", "prueba"));
-        notas.add(new Nota("Nota 3", "pruebajldajskdljaslkdjlaksjdlkasjdlkasjdlkasjdlkasjdlkajsdlkajsdlkasjdlkajsdlkajsdlkjasldkjaslkdasjlk"));
-        notas.add(new Nota("Prueba 3", "jay"));
+        // Creamos una instancia de la app e importamos la DB
+        NotaApplication app = (NotaApplication) getApplication();
+        NotaDatabase db = app.db;
+
+        // Obtenemos todas las notas de la DB
+        notasDB = db.notaDao().getNotas();
+
+        // Traducimos las notas para la lista de notas del RecyclerView
+        for (int i = 0; i < notasDB.size(); i++) {
+            notas.add(new Nota(notasDB.get(i).getTitulo(), notasDB.get(i).getDescripcion()));
+        }
 
         // Notificamos al adaptador que hay nueva info
+        adapter.notifyDataSetChanged();
+
+        // Añaidmos el listener para el boton de nueva nota
+        addNota.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Creamos un INTENT para cambiar de actividad
+                Intent intent = new Intent(MainActivity.this, NuevaNota.class);
+
+                // Lanzamos el intent
+                startActivity(intent);
+            }
+        });
+    }
+
+    /**
+     * Se ejecuta esta función cada vez que volvemos de otra actividad
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Limpiamos la lista de notas
+        notas.clear();
+
+        // Obtenemos la DB
+        NotaApplication app = (NotaApplication) getApplication();
+        NotaDatabase db = app.db;
+
+        // Obtenemos todas las notas de la DB
+        notasDB = db.notaDao().getNotas();
+
+        // Actualizamos la lista de notas
+        for (int i = 0; i < notasDB.size(); i++) {
+            notas.add(new Nota(notasDB.get(i).getTitulo(), notasDB.get(i).getDescripcion()));
+        }
+
+        // Actualizamos el adapter
         adapter.notifyDataSetChanged();
     }
 
