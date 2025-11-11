@@ -2,6 +2,8 @@ package ut3.act3.notas_android;
 
 // IMPORTS
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -19,7 +21,7 @@ import java.util.List;
  * @author Pau Aldea Batista
  * @version 1.0.0
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Adapter.notaListener {
     // Creamos el RecyclerView
     RecyclerView vistaNotas;
 
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         vistaNotas = findViewById(R.id.vistaNotas);
         vistaNotas.setLayoutManager(new LinearLayoutManager(this));
 
-        Adapter adapter = new Adapter(getApplicationContext(), notas);
+        Adapter adapter = new Adapter(getApplicationContext(), notas, this);
         vistaNotas.setAdapter(adapter);
 
         // Creamos 3 notas que añadimos a la lista
@@ -56,5 +58,15 @@ public class MainActivity extends AppCompatActivity {
 
         // Notificamos al adaptador que hay nueva info
         adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Función que ejecuta al hacer clic en una nota.
+     * Recibe como parametro una Nota.
+     *
+     * @param nota
+     */
+    @Override public void onNotaClick(Nota nota) {
+        Log.d("CLIC", "Se ha hecho click en la nota " + nota.getTitulo() + ".");
     }
 }
