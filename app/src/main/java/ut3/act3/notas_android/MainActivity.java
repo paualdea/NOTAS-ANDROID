@@ -1,6 +1,7 @@
 package ut3.act3.notas_android;
 
 // IMPORTS
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements Adapter.notaListe
         Adapter adapter = new Adapter(getApplicationContext(), notas, this);
         vistaNotas.setAdapter(adapter);
 
-        // Creamos 3 notas que añadimos a la lista
+        // Creamos 4 notas que añadimos a la lista
         notas.add(new Nota("Nota 1", "prueba"));
         notas.add(new Nota("Nota 2", "prueba"));
         notas.add(new Nota("Nota 3", "pruebajldajskdljaslkdjlaksjdlkasjdlkasjdlkasjdlkasjdlkajsdlkajsdlkasjdlkajsdlkajsdlkjasldkjaslkdasjlk"));
@@ -67,6 +68,14 @@ public class MainActivity extends AppCompatActivity implements Adapter.notaListe
      * @param nota
      */
     @Override public void onNotaClick(Nota nota) {
-        Log.d("CLIC", "Se ha hecho click en la nota " + nota.getTitulo() + ".");
+        // Creamos un INTENT para cambiar de actividad
+        Intent intent = new Intent(this, NotaDetalles.class);
+
+        // Añadimos los parametros de la nota clicada a la actividad
+        intent.putExtra("titulo", nota.getTitulo());
+        intent.putExtra("descripcion", nota.getDescripcion());
+
+        // Lanzamos el intent
+        startActivity(intent);
     }
 }
