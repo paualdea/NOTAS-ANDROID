@@ -45,17 +45,24 @@ public class NuevaNota extends AppCompatActivity {
                 String tituloText = titulo.getText().toString();
                 String descripcionText = descripcion.getText().toString();
 
-                // Obtenemos el ID de la nota a crear
-                int id = db.notaDao().idNota();
+                // Si el titulo de la nota esta vacio, no crearla
+                if (tituloText.isEmpty()) {
+                    finish();
+                }
+                // Si tiene titulo, crearla
+                else {
+                    // Obtenemos el ID de la nota a crear
+                    int id = db.notaDao().idNota();
 
-                // Creamos la nueva nota
-                Notas nota = new Notas(id, tituloText, descripcionText);
+                    // Creamos la nueva nota
+                    Notas nota = new Notas(id, tituloText, descripcionText);
 
-                // La insertamos en la DB
-                db.notaDao().insertNota(nota);
+                    // La insertamos en la DB
+                    db.notaDao().insertNota(nota);
 
-                // Finalizamos la actividad
-                finish();
+                    // Finalizamos la actividad
+                    finish();
+                }
             }
         });
 

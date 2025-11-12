@@ -17,6 +17,6 @@ public class NotaApplication extends Application {
         db = Room.databaseBuilder(getApplicationContext(), NotaDatabase.class, "notas").allowMainThreadQueries().build();
 
         // TODO DESCOMENTAR ESTA LÍNEA SI QUEREMOS QUE SE RESETEE LA BD CADA VEZ QUE EJECUTEMOS LA APLICACION
-        // db.clearAllTables();
+        //db.clearAllTables();
     }
 }
